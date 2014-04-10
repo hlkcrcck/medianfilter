@@ -1,0 +1,25 @@
+clc;clear all;close all;
+
+n_foto=imread('noisy_foto.jpg');
+gray_n_foto=rgb2gray(n_foto);
+imwrite(gray_n_foto,'noisy_gray.jpeg');
+clc;clear all;close all;
+gray_n_foto=imread('noisy_gray.jpeg');
+
+n=3; %filtre boyutu ayrýca resmin köþelerinde sorun çýkmamasý için
+%gray_n_foto_zero oluþturulurken kullanýlacak
+[row col]=size(gray_n_foto);
+gray_n_foto_zero=zeros(row+n-1,col+n-1);
+gray_n_foto_zero(ceil(n/2):row+floor(n/2),ceil(n/2):col+floor(n/2))=gray_n_foto;
+
+filtered_im = zeros(size(gray_n_foto,1), size(gray_n_foto,2));
+
+for x = ceil(n/2) : row+ceil(n/2);
+    for y = ceil(n/2) : col+ceil(n/2);
+        win = gray_n_foto_zero(y-floor(n/2):y+floor(n/2),x-floor(n/2):x+floor(n/2));
+        win=win(:)';
+        imf(x,y) = median(win);
+    end
+end
+
+figure; imshow(imf)
